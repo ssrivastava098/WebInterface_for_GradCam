@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}
+    Home
+{% endblock %}
+{% block body %}
+    <div class="container my-3 mymaincontainer">
+        <h2 class="my-3">Upload an Image</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data" class="my-3">
+            <label class="my-3" for="image">Choose an image:</label>
+            <input class="btn btn-outline-dark btn-sm mx-1 " type="file" id="image" name="image" accept="image/*">
+            <button class="btn btn-outline-dark btn-sm mx-1 " type="submit">Upload</button>
+        </form>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <div class="gallery">
+                    {% if latest_uploaded_image %}
+                        <h5>Uploaded Image:</h5>
+                        <img src="{{ url_for('uploaded_file', filename=latest_uploaded_image) }}" alt="Latest Uploaded Image">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="gallery">
+                    {% if latest_processed_image_gradCAM %}
+                        <h5>GradCAM Image:</h5>
+                        <img src="{{ url_for('processed_file', filename=latest_processed_image_gradCAM) }}" alt="Latest Processed Image">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="gallery">
+                    {% if latest_processed_image_Saliency %}
+                        <h5>Saliency Map Image:</h5>
+                        <img src="{{ url_for('processed_file', filename=latest_processed_image_Saliency) }}" alt="Latest Processed Image">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="container my-3 mymaincontainer">
+                {% if predictions %}
+                    <h3>Top 5 Predictions:</h3>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Class</th>
+                            <th scope="col">Predictions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for prediction in predictions %}
+                                <tr>
+                                    <th scope="row">{{ loop.index }}</th>
+                                    <td>{{prediction.class}}</td>
+                                    <td>{{prediction.probability}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
